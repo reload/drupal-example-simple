@@ -2,5 +2,5 @@ name: Log Stdout
 description: Log watchdog messages to stdout
 package: Logging
 type: module
-
+core_version_requirement: ^8 || ^9
 project: 'log_stdout'
