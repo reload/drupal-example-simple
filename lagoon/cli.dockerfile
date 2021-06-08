@@ -1,4 +1,4 @@
-FROM uselagoon/php-7.4-cli-drupal:latest
+FROM ghcr.io/reload/php-7.4-cli-drupal-ddf-core:0.0.1
 
 COPY composer.* /app/
 COPY assets /app/assets
