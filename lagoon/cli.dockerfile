@@ -1,2 +1,1 @@
-ARG CORE_RELEASE_VERSION
-FROM ghcr.io/reload/dpl-poc-cli:${CORE_RELEASE_VERSION}
+FROM ghcr.io/reload/dpl-poc-cli:1.2.3

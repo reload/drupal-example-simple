@@ -1,2 +1,1 @@
-ARG CORE_RELEASE_VERSION
-FROM ghcr.io/reload/dpl-poc-nginx:${CORE_RELEASE_VERSION}
+FROM ghcr.io/reload/dpl-poc-nginx:1.2.3
