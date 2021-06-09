@@ -29,10 +29,11 @@ volumes:
 services:
 
   cli: # cli container, will be used for executing composer and any local commands (drush, drupal, etc.)
-    # build:
-    #   context: .
-    #   dockerfile: lagoon/cli.dockerfile
-    image: ghcr.io/reload/dpl-poc-cli:1.2.3
+  build:
+      context: .
+      dockerfile: lagoon/cli.dockerfile
+      args:
+        CORE_RELEASE_VERSION: '1.2.3'
     labels:
       # Lagoon Labels
       lagoon.type: cli-persistent
@@ -47,12 +48,12 @@ services:
       << : *default-environment # loads the defined environment variables from the top
 
   nginx:
-    # build:
-    #   context: .
-    #   dockerfile: lagoon/nginx.dockerfile
-    #   args:
-    #     CORE_RELEASE_VERSION: '1.2.3'
-    image: ghcr.io/reload/dpl-poc-nginx:1.2.3
+    build:
+      context: .
+      dockerfile: lagoon/nginx.dockerfile
+      args:
+        CORE_RELEASE_VERSION: '1.2.3'
+    # image: ghcr.io/reload/dpl-poc-nginx:1.2.3
     labels:
       lagoon.type: nginx-php-persistent
       lagoon.persistent: /app/web/sites/default/files/ # define where the persistent storage should be mounted too
