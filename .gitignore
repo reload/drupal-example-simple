@@ -19,3 +19,6 @@ web/sites/simpletest
 /.idea/
 /.editorconfig
 /.gitattributes
+
+# Ignore task env
+/.task-env

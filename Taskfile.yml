@@ -1,0 +1,58 @@
+version: "3"
+
+dotenv: [".task-env"]
+
+vars:
+  REGISTRY: "ghcr.io"
+  ORG: "reload"
+  BUILD_NO: "{{ .BUILD_NO }}"
+  VERSION: "{{ .VERSION }}"
+  TAGGED_SOURCE_IMAGE: "{{ .REGISTRY }}/{{ .ORG }}/dpl-poc-build:{{ .BUILD_NO }}"
+  TAGGED_CLI_IMAGE: "{{ .REGISTRY }}/{{ .ORG }}/dpl-poc-cli:{{ .VERSION }}"
+  TAGGED_NGINX_IMAGE: "{{ .REGISTRY }}/{{ .ORG }}/dpl-poc-nginx:{{ .VERSION }}"
+  TAGGED_PHP_IMAGE: "{{ .REGISTRY }}/{{ .ORG }}/dpl-poc-php:{{ .VERSION }}"
+
+tasks:
+  ghcr:login:
+    desc: Login into Github Container Registry
+    cmds:
+      - echo {{ .CR_PAT }} | docker login {{ .REGISTRY }} -u username-not-used --password-stdin
+
+  image:source:build:
+    desc: Build core image.
+    cmds:
+      - docker build -f release/core/core.dockerfile --tag {{ .TAGGED_SOURCE_IMAGE }} .
+    preconditions:
+      - sh: "[ ! -z {{.BUILD_NO}} ]"
+        msg: "Env variable BUILD_NO is not set or empty."
+
+  image:source:push:
+    desc: Push core image to container registry.
+    deps: [ghcr:login]
+    cmds:
+      - docker push {{ .TAGGED_SOURCE_IMAGE }}
+    preconditions:
+      - sh: "[ ! -z {{.BUILD_NO}} ]"
+        msg: "Env variable BUILD_NO is not set or empty."
+
+  image:release:build:
+    desc: Build platform release images.
+    cmds:
+      - docker build -f release/platform/cli.dockerfile --build-arg CORE_RELEASE={{ .TAGGED_SOURCE_IMAGE }} --tag {{ .TAGGED_CLI_IMAGE }} .
+      - docker build -f release/platform/nginx.dockerfile --build-arg CLI_IMAGE={{ .TAGGED_CLI_IMAGE }} --tag {{ .NGINX_IMAGE_BASE }} .
+      - docker build -f release/platform/php.dockerfile --build-arg CLI_IMAGE={{ .TAGGED_CLI_IMAGE }} --tag {{ .PHP_IMAGE_BASE }} .
+    preconditions:
+      - sh: "[ ! -z {{.VERSION}} ]"
+        msg: "Env variable VERSION is not set or empty."
+
+      - sh: "[ ! -z {{.BUILD_NO}} ]"
+        msg: "Env variable BUILD_NO is not set or empty."
+
+  image:release:push:
+    desc: Push core image to container registry.
+    deps: [ghcr:login]
+    cmds:
+      - docker push {{ .TAGGED_SOURCE_IMAGE }}
+    preconditions:
+      - sh: "[ ! -z {{.VERSION}} ]"
+        msg: "Env variable VERSION is not set or empty."
