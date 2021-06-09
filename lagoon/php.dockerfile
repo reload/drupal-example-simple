@@ -1,1 +1,2 @@
-FROM ghcr.io/reload/dpl-poc-php:1.2.3
+ARG CORE_RELEASE_VERSION
+FROM ghcr.io/reload/dpl-poc-php:${CORE_RELEASE_VERSION}

@@ -20,7 +20,8 @@ x-user:
   &default-user
     # The default user under which the containers should run. Change this if you are on linux and run with another user than id `1000`
     user: '1000'
-
+x-release:
+  &core-release-version: '1.2.3'
 volumes:
   files:
     {}
@@ -31,7 +32,9 @@ services:
     build:
       context: .
       dockerfile: lagoon/cli.dockerfile
-    image: &cli-image ${COMPOSE_PROJECT_NAME:-drupal9-example-simple}-cli # this image will be reused as `CLI_IMAGE` in subsequent Docker builds
+      args:
+        CORE_RELEASE_VERSION: *core-release-version
+    # image: &cli-image ${COMPOSE_PROJECT_NAME:-drupal9-example-simple}-cli # this image will be reused as `CLI_IMAGE` in subsequent Docker builds
     labels:
       # Lagoon Labels
       lagoon.type: cli-persistent
@@ -50,7 +53,7 @@ services:
       context: .
       dockerfile: lagoon/nginx.dockerfile
       args:
-        CLI_IMAGE: *cli-image # Inject the name of the cli image
+        CORE_RELEASE_VERSION: *core-release-version
     labels:
       lagoon.type: nginx-php-persistent
       lagoon.persistent: /app/web/sites/default/files/ # define where the persistent storage should be mounted too
@@ -71,7 +74,7 @@ services:
       context: .
       dockerfile: lagoon/php.dockerfile
       args:
-        CLI_IMAGE: *cli-image
+        CORE_RELEASE_VERSION: *core-release-version
     labels:
       lagoon.type: nginx-php-persistent
       lagoon.name: nginx # we want this service be part of the nginx pod in Lagoon
