@@ -29,7 +29,7 @@ volumes:
 services:
 
   cli: # cli container, will be used for executing composer and any local commands (drush, drupal, etc.)
-  build:
+    build:
       context: .
       dockerfile: lagoon/cli.dockerfile
       args:
@@ -70,12 +70,12 @@ services:
       - default
 
   php:
-    # build:
-    #   context: .
-    #   dockerfile: lagoon/php.dockerfile
-    #   args:
-    #     CORE_RELEASE_VERSION: '1.2.3'
-    image: ghcr.io/reload/dpl-poc-php:1.2.3
+    build:
+      context: .
+      dockerfile: lagoon/php.dockerfile
+      args:
+        CORE_RELEASE_VERSION: '1.2.3'
+    # image: ghcr.io/reload/dpl-poc-php:1.2.3
     labels:
       lagoon.type: nginx-php-persistent
       lagoon.name: nginx # we want this service be part of the nginx pod in Lagoon
