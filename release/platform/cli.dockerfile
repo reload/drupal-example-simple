@@ -3,7 +3,7 @@ FROM ${CORE_RELEASE} as release
 
 FROM uselagoon/php-7.4-cli-drupal:latest
 
-COPY --from=builder /app /app
+COPY --from=release /app /app
 
 RUN mkdir -p -v -m775 /app/web/sites/default/files
 

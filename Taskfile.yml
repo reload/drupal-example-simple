@@ -39,8 +39,8 @@ tasks:
     desc: Build platform release images.
     cmds:
       - docker build -f release/platform/cli.dockerfile --build-arg CORE_RELEASE={{ .TAGGED_SOURCE_IMAGE }} --tag {{ .TAGGED_CLI_IMAGE }} .
-      - docker build -f release/platform/nginx.dockerfile --build-arg CLI_IMAGE={{ .TAGGED_CLI_IMAGE }} --tag {{ .NGINX_IMAGE_BASE }} .
-      - docker build -f release/platform/php.dockerfile --build-arg CLI_IMAGE={{ .TAGGED_CLI_IMAGE }} --tag {{ .PHP_IMAGE_BASE }} .
+      - docker build -f release/platform/nginx.dockerfile --build-arg CLI_IMAGE={{ .TAGGED_CLI_IMAGE }} --tag {{ .TAGGED_NGINX_IMAGE }} .
+      - docker build -f release/platform/php.dockerfile --build-arg CLI_IMAGE={{ .TAGGED_CLI_IMAGE }} --tag {{ .TAGGED_PHP_IMAGE }} .
     preconditions:
       - sh: "[ ! -z {{.VERSION}} ]"
         msg: "Env variable VERSION is not set or empty."
@@ -52,7 +52,9 @@ tasks:
     desc: Push core image to container registry.
     deps: [ghcr:login]
     cmds:
-      - docker push {{ .TAGGED_SOURCE_IMAGE }}
+      - docker push {{ .TAGGED_CLI_IMAGE }}
+      - docker push {{ .TAGGED_NGINX_IMAGE }}
+      - docker push {{ .TAGGED_PHP_IMAGE }}
     preconditions:
       - sh: "[ ! -z {{.VERSION}} ]"
         msg: "Env variable VERSION is not set or empty."
