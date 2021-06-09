@@ -3,12 +3,6 @@ docker-compose-yaml: docker-compose.yml
 project: drupal9-example-simple
 
 tasks:
-#   pre-rollout:
-#     - run:
-#         name: drush sql-dump
-#         command: mkdir -p /app/web/sites/default/files/private/ && drush sql-dump --ordered-dump --gzip --result-file=/app/web/sites/default/files/private/pre-deploy-dump.sql.gz || true
-#         service: cli
-
   post-rollout:
     # Enable once config sync has been setup.
     # - run:
@@ -16,18 +10,12 @@ tasks:
     #     command: drush -y cim
     #     service: cli
     - run:
-        name: drush updb
-        command: drush -y updb
+        name: drush deploy
+        command: drush deploy
         service: cli
-    - run:
-        name: drush cr
-        command: drush -y cr
-        service: cli
-
-
 
 environments:
-  9.x:
+  main:
     # routes:
     cronjobs:
       - name: drush cron
