@@ -4,11 +4,6 @@ project: drupal9-example-simple
 
 tasks:
   post-rollout:
-    # Enable once config sync has been setup.
-    # - run:
-    #     name: drush cim
-    #     command: drush -y cim
-    #     service: cli
     - run:
         name: drush deploy
         command: drush deploy
